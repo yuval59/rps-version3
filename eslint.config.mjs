@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone Bun server app; linted separately, not part of the Next.js project.
+    "server/**",
   ]),
 ]);
 
