@@ -60,6 +60,13 @@ export const Player = ({ type, team, position, boardSize, className = '' }: Play
                     WebkitMaskSize: 'contain',
                     WebkitMaskRepeat: 'no-repeat',
                     WebkitMaskPosition: 'center',
+                    // Outline the masked shape with a light/dark double stroke so the piece
+                    // stays visible regardless of the tile color underneath it. Progressively
+                    // larger radii build up a solid halo (a single repeated radius only adds
+                    // opacity, not width).
+                    filter:
+                        'drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) ' +
+                        'drop-shadow(0 0 3px #fff) drop-shadow(0 0 4px rgba(0,0,0,0.55))',
                 }}
             />
         </div>
