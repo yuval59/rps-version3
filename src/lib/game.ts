@@ -2,7 +2,7 @@ import type { PlayerType, Position, Team } from '@/components/Player'
 
 export type { PlayerType, Position, Team }
 
-export const BOARD_SIZE = 8
+export const BOARD_SIZE = 9
 
 export type Piece = {
     id: string
@@ -22,21 +22,32 @@ export type GameState = {
 export const getHomeRow = (team: Team, boardSize: number) => (team === 'blue' ? 0 : boardSize - 1)
 export const getGoalRow = (team: Team, boardSize: number) => (team === 'blue' ? boardSize - 1 : 0)
 
-const START_TYPES: PlayerType[] = ['rock', 'paper', 'scissors']
+/**
+ * Piece types for each of the first three rows from a team's home row, going inward.
+ * Blue starts with scissors on row 0, paper on row 1, rock on row 2; red mirrors this
+ * from its own home row inward (scissors, paper, rock going toward the middle).
+ */
+const ROW_TYPES: PlayerType[] = ['scissors', 'paper', 'rock']
+const PIECES_PER_ROW = 3
 
 export const createInitialPieces = (boardSize: number): Piece[] => {
     const pieces: Piece[] = []
-    const middleStart = Math.floor((boardSize - START_TYPES.length) / 2)
+    const middleStart = Math.floor((boardSize - PIECES_PER_ROW) / 2)
 
     ;(['blue', 'red'] as Team[]).forEach((team) => {
-        const row = getHomeRow(team, boardSize)
-        START_TYPES.forEach((type, index) => {
-            pieces.push({
-                id: `${team}-${type}`,
-                type,
-                team,
-                position: { row, col: middleStart + index },
-            })
+        const homeRow = getHomeRow(team, boardSize)
+        const rowDirection = team === 'blue' ? 1 : -1
+
+        ROW_TYPES.forEach((type, rowOffset) => {
+            const row = homeRow + rowOffset * rowDirection
+            for (let index = 0; index < PIECES_PER_ROW; index++) {
+                pieces.push({
+                    id: `${team}-${type}-${index}`,
+                    type,
+                    team,
+                    position: { row, col: middleStart + index },
+                })
+            }
         })
     })
 
